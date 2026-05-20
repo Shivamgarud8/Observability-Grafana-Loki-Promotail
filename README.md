@@ -19,7 +19,7 @@ This implementation includes:
 - AWS EC2 with Security Group configuration
 
 ---
-
+![Architecture](new/work.png).
 ## Final Architecture
 
 ```
