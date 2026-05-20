@@ -112,7 +112,7 @@ Email notification on threshold breach
 ```
 
 ---
-
+![Architecture](new/1.png).
 ## Technology Stack
 
 | Category        | Tool                       | Version   |
@@ -169,7 +169,8 @@ Before starting, launch three EC2 instances on AWS and open the required ports i
 Set up the CI/CD server with Jenkins, install Node Exporter to expose infrastructure metrics, and install Promtail to ship logs to Loki.
 
 ---
-
+![Architecture](new/j.png).
+![Architecture](new/1.png).
 ### Step 1 — Launch EC2 Instance for Server 1
 
 Launch an Amazon Linux 2 EC2 instance on AWS. Open ports 8080 and 9100 in the Security Group.
@@ -186,8 +187,7 @@ Update the system and add the Jenkins YUM repository. Install Java 17 (Amazon Co
 
 Jenkins runs on port 8080.
 
-![Jenkins Install](images/server1-jenkins-install.png)
-
+![Architecture](new/j2.png).
 ---
 
 ### Step 3 — Unlock Jenkins
@@ -196,19 +196,10 @@ Open `http://SERVER1-IP:8080` in the browser. Jenkins asks for the initial admin
 
 Retrieve it from the server and paste it in the browser to complete setup.
 
-![Jenkins Unlock](images/server1-jenkins-unlock.png)
 
 ---
 
-### Step 4 — Jenkins Dashboard
-
-Install suggested plugins and create the admin user. The Jenkins dashboard is now ready.
-
-![Jenkins Dashboard](images/server1-jenkins-dashboard.png)
-
----
-
-### Step 5 — Install Node Exporter
+### Step  — Install Node Exporter
 
 Download Node Exporter v1.9.1 into `/tmp`, extract it, and register it as a systemd service so it starts automatically on boot.
 
@@ -232,8 +223,7 @@ Create a config file pointing to the Loki URL on Server 3 at port 3100, and set 
 
 Register as a systemd service and start it. Promtail now continuously ships Jenkins logs to Loki.
 
-![Promtail Running](images/server1-promtail.png)
-
+![Architecture](new/r1.png).
 ---
 
 Run the installation script:
@@ -258,7 +248,7 @@ Launch an Ubuntu 24.04 EC2 instance. Open ports 80 and 9100 in the Security Grou
 
 SSH into Server 2.
 
-![EC2 Instance Server 2](images/server2-ec2-launch.png)
+![Architecture](new/s3.png).
 
 ---
 
@@ -266,27 +256,13 @@ SSH into Server 2.
 
 Install Python 3 and pip, then install Flask and Gunicorn as the WSGI server.
 
-![Flask Install](images/server2-flask-install.png)
+![Architecture](new/r2.png).
 
 ---
 
-### Step 3 — Install NGINX
 
-Install NGINX and configure it as a reverse proxy. NGINX listens on port 80 and forwards all incoming requests to Flask running on port 5000.
 
-![NGINX Running](images/server2-nginx.png)
 
----
-
-### Step 4 — Deploy Flask Application
-
-Place the Flask application code on Server 2 and start it with Gunicorn on port 5000.
-
-Open `http://SERVER2-IP` in the browser — NGINX proxies the request to Flask.
-
-![Flask App Running](images/server2-flask-running.png)
-
----
 
 ### Step 5 — Install Node Exporter
 
@@ -298,15 +274,9 @@ Verify:
 curl localhost:9100/metrics
 ```
 
-![Node Exporter Server 2](images/server2-node-exporter.png)
 
 ---
 
-### Step 6 — Install Promtail
-
-Same process as Server 1 with two differences — log paths point to Flask and NGINX logs, and job labels are set to `flask-app` and `nginx`.
-
-![Promtail Server 2](images/server2-promtail.png)
 
 ---
 
@@ -332,7 +302,6 @@ Launch an Ubuntu 24.04 EC2 instance. Open ports 3000, 9090, and 3100 in the Secu
 
 SSH into Server 3.
 
-![EC2 Instance Server 3](images/server3-ec2-launch.png)
 
 ---
 
@@ -344,7 +313,6 @@ Edit `prometheus.yml` to add three scrape targets — Prometheus itself, Jenkins
 
 Register as a systemd service and start it on port 9090.
 
-![Prometheus Install](images/server3-prometheus-install.png)
 
 ---
 
@@ -354,7 +322,7 @@ Open `http://SERVER3-IP:9090/targets` in the browser.
 
 All three targets — `prometheus`, `jenkins-server`, and `flask-server` — must show status `UP` before dashboards will show data.
 
-![Prometheus Targets UP](images/server3-prometheus-targets.png)
+
 
 ---
 
@@ -366,7 +334,7 @@ Create a `loki-config.yaml` with local filesystem storage. Register as a systemd
 
 Loki is now ready to receive log streams from Promtail on Server 1 and Server 2.
 
-![Loki Running](images/server3-loki.png)
+
 
 ---
 
@@ -376,7 +344,6 @@ Install the Grafana Enterprise `.deb` package, enable the service, and start it.
 
 Open `http://SERVER3-IP:3000` in the browser. Default login is `admin` / `admin`.
 
-![Grafana Login](images/server3-grafana-login.png)
 
 ---
 
@@ -384,7 +351,7 @@ Open `http://SERVER3-IP:3000` in the browser. Default login is `admin` / `admin`
 
 After logging in, the Grafana home screen appears. Datasources and dashboards are configured in the next phase.
 
-![Grafana Home](images/server3-grafana-home.png)
+
 
 ---
 
@@ -410,7 +377,7 @@ In Grafana navigate to `Connections → Data Sources → Add new datasource → 
 
 Set the URL to `http://localhost:9090` and click Save & Test.
 
-![Prometheus Datasource](images/grafana-prometheus-datasource.png)
+
 
 ---
 
@@ -420,7 +387,6 @@ In Grafana navigate to `Connections → Data Sources → Add new datasource → 
 
 Set the URL to `http://localhost:3100` and click Save & Test.
 
-![Loki Datasource](images/grafana-loki-datasource.png)
 
 ---
 
@@ -428,7 +394,7 @@ Set the URL to `http://localhost:3100` and click Save & Test.
 
 Open `http://SERVER3-IP:9090/targets`. All three targets — `prometheus`, `jenkins-server`, and `flask-server` — must show `UP` before dashboards show any data.
 
-![Prometheus Targets](images/grafana-targets-up.png)
+
 
 ---
 
@@ -446,7 +412,7 @@ In Grafana navigate to `Dashboards → Import`. Enter Dashboard ID `1860` and se
 
 This gives CPU, RAM, disk, network, and uptime panels. Import once for Jenkins Server and once for Flask Server.
 
-![Dashboard Import](images/grafana-dashboard-import.png)
+
 
 ---
 
@@ -454,7 +420,6 @@ This gives CPU, RAM, disk, network, and uptime panels. Import once for Jenkins S
 
 After import, the Jenkins Server monitoring dashboard shows live CPU, RAM, disk, and network panels.
 
-![Jenkins Dashboard](images/grafana-jenkins-dashboard.png)
 
 ---
 
@@ -462,7 +427,7 @@ After import, the Jenkins Server monitoring dashboard shows live CPU, RAM, disk,
 
 Same dashboard imported again for Flask Server. All panels show Flask server metrics.
 
-![Flask Dashboard](images/grafana-flask-dashboard.png)
+
 
 ---
 
@@ -476,8 +441,7 @@ Create a new dashboard and add a Logs panel with Loki as the datasource.
 | All Flask logs           | `{job="flask-app"}`                  |
 | Flask errors only        | `{job="flask-app"} \|= "ERROR"`      |
 | Jenkins build failures   | `{job="jenkins"} \|= "FAILED"`       |
-
-![Loki Logs Dashboard](images/grafana-loki-logs.png)
+![Architecture](new/g1.png).
 
 ---
 
@@ -493,8 +457,8 @@ Configure Grafana to send alert notifications via Gmail.
 
 Go to `myaccount.google.com/security` and enable 2-Step Verification. Then open App Passwords, create a new entry named Grafana, and copy the 16-character password Google generates.
 
-![Gmail App Password](images/gmail-app-password.png)
 
+![Architecture](new/g2.png).
 ---
 
 ### Step 2 — Edit Grafana SMTP Config
@@ -513,7 +477,7 @@ In Grafana navigate to `Alerts & IRM → Contact Points → Add Contact Point`. 
 
 A test email should arrive within seconds. If it does not, check for remaining semicolons in `grafana.ini` and confirm the App Password is correct.
 
-![Contact Point](images/grafana-contact-point.png)
+
 
 ---
 
@@ -521,8 +485,8 @@ A test email should arrive within seconds. If it does not, check for remaining s
 
 Confirm the test alert email arrives in your inbox. The email comes from Grafana Alerts with the subject line `[FIRING] TestAlert`.
 
-![Test Email](images/grafana-test-email.png)
 
+![Architecture](new/intro.png).
 ---
 
 ## Phase 7 — Alert Rules Setup
@@ -552,57 +516,10 @@ In Grafana navigate to `Alerts & IRM → Alert Rules → New Alert Rule`.
 
 Create a new folder named `Infrastructure Alerts` and a new evaluation group named `server-alerts` with interval `1m`.
 
-![Alert Folder Setup](images/grafana-alert-folder.png)
+![Architecture](new/r3.png).
+![Architecture](new/r4.png).
 
 ---
-
-### Step 2 — CPU Alert
-
-This alert fires when CPU usage exceeds 70% for 1 continuous minute. The PromQL query calculates real CPU percentage by subtracting idle CPU time from 100. Set condition to `Is above 70`.
-
-To test, run a CPU stress command on the Jenkins server. Within 1–2 minutes the alert moves Normal → Pending → Firing and an email is delivered.
-
-![CPU Alert Rule](images/grafana-cpu-alert.png)
-
----
-
-### Step 3 — RAM Alert
-
-Monitors memory usage as a percentage of total RAM. Set condition to `Is above 85`.
-
-![RAM Alert Rule](images/grafana-ram-alert.png)
-
----
-
-### Step 4 — Disk Alert
-
-Monitors disk utilization using Node Exporter filesystem metrics. Set condition to `Is above 90`.
-
-![Disk Alert Rule](images/grafana-disk-alert.png)
-
----
-
-### Step 5 — Server Down Alert
-
-Monitors the `up` metric which Prometheus sets to 0 when a target becomes unreachable. Set pending period to `None` so it fires immediately. This is the most critical alert in the stack.
-
-![Server Down Alert](images/grafana-serverdown-alert.png)
-
----
-
-### Step 6 — Alert Firing
-
-When a threshold is breached, the alert status changes to Firing and the email notification is sent to the configured contact point.
-
-![Alert Firing](images/grafana-alert-firing.png)
-
----
-
-### Step 7 — Email Notification Received
-
-The alert email arrives with server name, condition, and timestamp. Resolves automatically when the metric drops below threshold.
-
-![Alert Email](images/grafana-alert-email.png)
 
 ---
 
@@ -663,26 +580,6 @@ The alert email arrives with server name, condition, and timestamp. Resolves aut
 | Flask Server Monitoring    | Prometheus  | 1860      |
 | Jenkins Application Logs   | Loki        | Custom    |
 | Flask Application Logs     | Loki        | Custom    |
-
----
-
-## Common Issues and Fixes
-
-**Dashboard shows N/A or No Data**
-
-Node Exporter is not running on that server, or port 9100 is blocked in the Security Group. SSH in, start Node Exporter, and check `http://SERVER3-IP:9090/targets` for UP status.
-
-**Alert fires but no email received**
-
-The Contact Point field was left empty in the alert rule. Open the rule, select `grafana-default-email`, and save.
-
-**SMTP test fails in Grafana**
-
-The `[smtp]` section in `grafana.ini` still has semicolons disabling settings, or the host is set to `localhost:25`. Fix both and restart Grafana.
-
-**CPU alert fires at 0.35% usage**
-
-The alert threshold was left at `Is above 0`. Change the condition to `Is above 70`.
 
 ---
 
