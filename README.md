@@ -177,7 +177,7 @@ Launch an Amazon Linux 2 EC2 instance on AWS. Open ports 8080 and 9100 in the Se
 
 SSH into Server 1 using your key pair.
 
-![EC2 Instance Launch](images/server1-ec2-launch.png)
+
 
 ---
 
@@ -211,7 +211,7 @@ Verify it is running:
 curl localhost:9100/metrics
 ```
 
-![Node Exporter Running](images/server1-node-exporter.png)
+
 
 ---
 
@@ -457,10 +457,8 @@ Configure Grafana to send alert notifications via Gmail.
 
 Go to `myaccount.google.com/security` and enable 2-Step Verification. Then open App Passwords, create a new entry named Grafana, and copy the 16-character password Google generates.
 
-
-![Architecture](new/g2.png).
 ---
-
+![Architecture](new/g2.png).
 ### Step 2 — Edit Grafana SMTP Config
 
 On Server 3 open `/etc/grafana/grafana.ini` and find the `[smtp]` section.
@@ -486,9 +484,9 @@ A test email should arrive within seconds. If it does not, check for remaining s
 Confirm the test alert email arrives in your inbox. The email comes from Grafana Alerts with the subject line `[FIRING] TestAlert`.
 
 
-![Architecture](new/intro.png).
----
 
+---
+![Architecture](new/intro.png).
 ## Phase 7 — Alert Rules Setup
 
 ### Objective
