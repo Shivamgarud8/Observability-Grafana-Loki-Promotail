@@ -77,7 +77,7 @@ The project covers the full observability triangle: **metrics**, **logs**, and *
 ```
 
 ---
-
+![Architecture](new/1.png).
 ## Server Roles
 
 | Server   | Role                    | Key Tools                                   |
