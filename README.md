@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This project demonstrates a complete production-grade observability infrastructure deployed across three dedicated AWS EC2 instances using Jenkins, Flask, Prometheus, Loki, Grafana, Node Exporter, and Promtail.
+The project demonstrates a complete production-grade observability infrastructure deployed across three dedicated AWS EC2 instances using Jenkins, Flask, Prometheus, Loki, Grafana, Node Exporter, and Promtail.
 
 The primary goal is to simulate how real engineering teams monitor, log, and alert on production systems — covering the full observability triangle: metrics, logs, and alerting.
 
